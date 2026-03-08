@@ -1,0 +1,15 @@
+default: &default
+  clients:
+    default:
+      uri: <%= ENV.fetch("MONGODB_URI", "mongodb://127.0.0.1:27017/query_pulse_#{Rails.env}") %>
+      options:
+        server_selection_timeout: <%= Rails.env.test? ? 1 : 5 %>
+  options:
+    raise_not_found_error: false
+
+development:
+  <<: *default
+test:
+  <<: *default
+production:
+  <<: *default

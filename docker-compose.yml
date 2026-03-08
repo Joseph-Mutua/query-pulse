@@ -1,0 +1,70 @@
+services:
+  web:
+    build: .
+    command: ["bin/rails", "server", "-b", "0.0.0.0"]
+    env_file: .env
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - .:/rails
+      - bundle:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  sidekiq:
+    build: .
+    command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+    env_file: .env
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - .:/rails
+      - bundle:/usr/local/bundle
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  mongodb:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  browser-worker:
+    build: ./browser-worker
+    environment:
+      PORT: 3100
+      ALLOWED_HOSTS: www.google.com,www.bing.com
+    ports:
+      - "3100:3100"
+
+volumes:
+  bundle:
+  mongo-data:
+  redis-data:

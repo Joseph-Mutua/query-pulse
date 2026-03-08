@@ -1,0 +1,10 @@
+:concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY", 5) %>
+:queues:
+  - critical
+  - default
+  - low
+:scheduler:
+  :schedule:
+    enqueue_due_monitors:
+      cron: "* * * * *"
+      class: "EnqueueDueMonitorsJob"
