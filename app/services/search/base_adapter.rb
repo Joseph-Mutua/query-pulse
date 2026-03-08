@@ -1,3 +1,5 @@
+require_relative "errors"
+
 module Search
   class BaseAdapter
     def execute(query:, location:, language:, device:, country: nil)

@@ -4,13 +4,13 @@ class PlaygroundController < ApplicationController
     return unless request.post?
 
     if params[:intent] == "save"
-      monitor = Monitor.create!(@request_data.slice("engine", "query", "location", "language", "device")
+      monitor = QueryPulse::Monitor.create!(@request_data.slice("engine", "query", "location", "language", "device")
                                 .merge("name" => @request_data["name"].presence || @request_data["query"].truncate(70),
                                        "country" => "us", "frequency" => "1h"))
       return redirect_to monitor, notice: "Playground request saved as a monitor."
     end
 
-    monitor = Monitor.new(@request_data.slice("engine", "query", "location", "language", "device")
+    monitor = QueryPulse::Monitor.new(@request_data.slice("engine", "query", "location", "language", "device")
                           .merge("name" => "Playground", "country" => "us"))
     result = Search::AdapterFactory.for(monitor.engine).execute(query: monitor.query, location: monitor.location,
                                                                 language: monitor.language, device: monitor.device,

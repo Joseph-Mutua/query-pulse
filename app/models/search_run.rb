@@ -4,8 +4,8 @@ class SearchRun
 
   STATUSES = %w[pending running success failed timeout invalid_response].freeze
 
-  belongs_to :monitor
-  has_one :snapshot, dependent: :delete
+  belongs_to :monitor, class_name: "QueryPulse::Monitor", inverse_of: :search_runs
+  has_one :snapshot, dependent: :delete_all
 
   field :started_at, type: Time
   field :completed_at, type: Time
@@ -20,7 +20,7 @@ class SearchRun
   field :schema_fingerprint, type: String
   field :error_type, type: String
   field :error_message, type: String
-  field :changes, type: Array, default: []
+  field :response_changes, type: Array, default: []
   field :assertion_results, type: Array, default: []
   field :relevance_score, type: Integer
   field :diagnostics, type: Hash, default: {}

@@ -17,7 +17,7 @@ module Assertions
     end
 
     def call
-      @assertions.map { |name, expected| public_send("evaluate_#{name}", expected) }
+      @assertions.map { |name, expected| send("evaluate_#{name}", expected) }
     end
 
     private

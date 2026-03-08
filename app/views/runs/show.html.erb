@@ -15,14 +15,14 @@
 
 <section class="panel" style="margin-top:18px" data-controller="tabs">
   <div class="tabs" role="tablist">
-    <% [["normalized","Normalized JSON"],["raw","Raw JSON"],["changes","Changes (#{@run.changes.length})"],["assertions","Assertions"],["diagnostics","Diagnostics"]].each_with_index do |(key,label), index| %>
+    <% [["normalized","Normalized JSON"],["raw","Raw JSON"],["changes","Changes (#{@run.response_changes.length})"],["assertions","Assertions"],["diagnostics","Diagnostics"]].each_with_index do |(key,label), index| %>
       <button class="tab <%= 'active' if index.zero? %>" data-tabs-target="tab" data-action="click->tabs#select" data-key="<%= key %>" role="tab"><%= label %></button>
     <% end %>
   </div>
   <div class="tab-panel active" data-tabs-target="panel" data-key="normalized"><pre class="json-view"><%= JSON.pretty_generate(@run.normalized_response) %></pre></div>
   <div class="tab-panel" data-tabs-target="panel" data-key="raw"><pre class="json-view"><%= JSON.pretty_generate(@run.raw_response) %></pre></div>
   <div class="tab-panel" data-tabs-target="panel" data-key="changes">
-    <% if @run.changes.any? %><div class="change-row text-muted"><strong>Type</strong><strong>Path</strong><strong>Previous</strong><strong>Current</strong></div><% @run.changes.each do |change| %><div class="change-row"><div><%= status_badge(change["severity"]) %><span class="secondary"><%= change["type"] %></span></div><div class="mono"><%= change["path"] %></div><div class="value-box mono"><%= change["previous"].inspect %></div><div class="value-box mono"><%= change["current"].inspect %></div></div><% end %><% else %><div class="empty-state"><strong>No unexpected changes</strong>This is a baseline or the response matches its predecessor.</div><% end %>
+    <% if @run.response_changes.any? %><div class="change-row text-muted"><strong>Type</strong><strong>Path</strong><strong>Previous</strong><strong>Current</strong></div><% @run.response_changes.each do |change| %><div class="change-row"><div><%= status_badge(change["severity"]) %><span class="secondary"><%= change["type"] %></span></div><div class="mono"><%= change["path"] %></div><div class="value-box mono"><%= change["previous"].inspect %></div><div class="value-box mono"><%= change["current"].inspect %></div></div><% end %><% else %><div class="empty-state"><strong>No unexpected changes</strong>This is a baseline or the response matches its predecessor.</div><% end %>
   </div>
   <div class="tab-panel" data-tabs-target="panel" data-key="assertions">
     <% if @run.assertion_results.any? %><div class="table-wrap"><table class="data-table"><thead><tr><th>Assertion</th><th>Result</th><th>Expected</th><th>Actual</th></tr></thead><tbody><% @run.assertion_results.each do |result| %><tr><td class="mono"><%= result["assertion"] %></td><td><%= status_badge(result["passed"] ? "success" : "failed") %></td><td class="mono"><%= result["expected"].inspect %></td><td class="mono"><%= result["actual"].inspect.truncate(120) %></td></tr><% end %></tbody></table></div><% else %><div class="empty-state"><strong>No assertion output</strong>This run has no configured expectations or has not finished.</div><% end %>

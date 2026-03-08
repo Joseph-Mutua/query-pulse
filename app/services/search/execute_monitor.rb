@@ -55,7 +55,7 @@ module Search
                                                      response_time_ms: result.duration_ms)
       relevance = Assertions::RelevanceScorer.call(data: normalized, query: @monitor.query,
                                                     assertions: @monitor.assertions, assertion_results:)
-      run.set(schema_fingerprint: current.schema_hash, changes: comparison["changes"],
+      run.set(schema_fingerprint: current.schema_hash, response_changes: comparison["changes"],
               assertion_results:, relevance_score: relevance["score"],
               diagnostics: { "relevance" => relevance, "comparison_summary" => comparison["summary"] })
       performance = Metrics::LatencyRegression.call(monitor: @monitor)

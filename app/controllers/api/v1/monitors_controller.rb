@@ -4,7 +4,7 @@ module Api
       before_action :set_monitor, only: %i[show update destroy run runs]
 
       def index
-        criteria = Monitor.order_by(created_at: :desc)
+        criteria = QueryPulse::Monitor.order_by(created_at: :desc)
         criteria = criteria.where(enabled: ActiveModel::Type::Boolean.new.cast(params[:enabled])) if params.key?(:enabled)
         records, pagination = paginate(criteria)
         render json: { data: records.map { |monitor| serialize(monitor) }, pagination: }
@@ -15,7 +15,7 @@ module Api
       end
 
       def create
-        monitor = Monitor.new(monitor_params)
+        monitor = QueryPulse::Monitor.new(monitor_params)
         if monitor.save
           render json: { data: serialize(monitor, detailed: true) }, status: :created,
                  location: api_v1_monitor_url(monitor)
@@ -55,7 +55,7 @@ module Api
       private
 
       def set_monitor
-        @monitor = Monitor.find(params[:id])
+        @monitor = QueryPulse::Monitor.find(params[:id])
       end
 
       def monitor_params

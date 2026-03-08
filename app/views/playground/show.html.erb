@@ -2,8 +2,8 @@
 <div class="grid-2">
   <section class="panel"><header class="panel-header"><h2>Request</h2><span class="badge badge-neutral">offline-safe</span></header><div class="panel-body">
     <%= form_with url: playground_path, method: :post, scope: :search, class: "form-grid" do |form| %>
-      <div class="field"><%= form.label :engine %><%= form.select :engine, Monitor::ENGINES.map { |value| [value.humanize, value] }, { selected: @request_data["engine"] }, class: "select" %></div>
-      <div class="field"><%= form.label :device %><%= form.select :device, Monitor::DEVICES.map { |value| [value.humanize, value] }, { selected: @request_data["device"] }, class: "select" %></div>
+      <div class="field"><%= form.label :engine %><%= form.select :engine, QueryPulse::Monitor::ENGINES.map { |value| [value.humanize, value] }, { selected: @request_data["engine"] }, class: "select" %></div>
+      <div class="field"><%= form.label :device %><%= form.select :device, QueryPulse::Monitor::DEVICES.map { |value| [value.humanize, value] }, { selected: @request_data["device"] }, class: "select" %></div>
       <div class="field full"><%= form.label :query %><%= form.text_field :query, value: @request_data["query"], class: "input mono", required: true %></div>
       <div class="field"><%= form.label :location %><%= form.text_field :location, value: @request_data["location"], class: "input" %></div>
       <div class="field"><%= form.label :language %><%= form.text_field :language, value: @request_data["language"], class: "input" %></div>

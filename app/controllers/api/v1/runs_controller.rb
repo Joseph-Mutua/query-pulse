@@ -14,8 +14,8 @@ module Api
             run_id: @run.id.to_s,
             previous_run_id: previous&.id&.to_s,
             schema_changed: previous.present? && previous.schema_fingerprint != @run.schema_fingerprint,
-            changes: @run.changes,
-            summary: Array(@run.changes).group_by { |change| change["type"] }.transform_values(&:count)
+            changes: @run.response_changes,
+            summary: Array(@run.response_changes).group_by { |change| change["type"] }.transform_values(&:count)
           }
         }
       end
@@ -33,7 +33,7 @@ module Api
         }
         if detailed
           payload.merge!(normalized_response: run.normalized_response, raw_response: run.raw_response,
-                         changes: run.changes, assertion_results: run.assertion_results,
+                         changes: run.response_changes, assertion_results: run.assertion_results,
                          diagnostics: run.diagnostics)
         end
         payload

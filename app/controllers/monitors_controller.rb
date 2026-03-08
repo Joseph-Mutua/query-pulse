@@ -2,7 +2,7 @@ class MonitorsController < ApplicationController
   before_action :set_monitor, only: %i[show edit update destroy run toggle]
 
   def index
-    @monitors = Monitor.order_by(created_at: :desc)
+    @monitors = QueryPulse::Monitor.order_by(created_at: :desc)
   end
 
   def show
@@ -12,13 +12,13 @@ class MonitorsController < ApplicationController
   end
 
   def new
-    @monitor = Monitor.new
+    @monitor = QueryPulse::Monitor.new
   end
 
   def edit; end
 
   def create
-    @monitor = Monitor.new(monitor_params)
+    @monitor = QueryPulse::Monitor.new(monitor_params)
     if @monitor.save
       redirect_to @monitor, notice: "Monitor created."
     else
@@ -55,7 +55,7 @@ class MonitorsController < ApplicationController
   private
 
   def set_monitor
-    @monitor = Monitor.find(params[:id])
+    @monitor = QueryPulse::Monitor.find(params[:id])
   end
 
   def monitor_params

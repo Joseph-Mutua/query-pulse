@@ -32,7 +32,7 @@ module Metrics
         "p95_latency_ms" => percentile(latencies, 0.95),
         "p99_latency_ms" => percentile(latencies, 0.99),
         "average_result_count" => average(counts),
-        "schema_changes" => runs.count { |run| Array(run.changes).any? { |change| %w[FIELD_ADDED FIELD_REMOVED TYPE_CHANGED].include?(change["type"]) } },
+        "schema_changes" => runs.count { |run| Array(run.response_changes).any? { |change| %w[FIELD_ADDED FIELD_REMOVED TYPE_CHANGED].include?(change["type"]) } },
         "incident_count" => scoped_incidents.count
       }
     end

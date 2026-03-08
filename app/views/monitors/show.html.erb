@@ -24,7 +24,7 @@
   <div>
     <section class="panel"><header class="panel-header"><h2>Execution history</h2><span class="secondary">Most recent 25</span></header>
       <% if @runs.any? %><div class="table-wrap"><table class="data-table"><thead><tr><th>Started</th><th>Status</th><th>Provider</th><th>Latency</th><th>Results</th><th>Changes</th></tr></thead><tbody>
-        <% @runs.each do |run| %><tr><td><%= link_to(run.started_at ? l(run.started_at, format: :short) : "Queued", run_path(run), class: "primary-cell") %></td><td><%= status_badge(run.status) %></td><td class="mono"><%= run.provider %></td><td class="mono"><%= format_duration(run.response_time_ms) %></td><td class="mono"><%= run.result_count %></td><td class="mono"><%= run.changes.length %></td></tr><% end %>
+        <% @runs.each do |run| %><tr><td><%= link_to(run.started_at ? l(run.started_at, format: :short) : "Queued", run_path(run), class: "primary-cell") %></td><td><%= status_badge(run.status) %></td><td class="mono"><%= run.provider %></td><td class="mono"><%= format_duration(run.response_time_ms) %></td><td class="mono"><%= run.result_count %></td><td class="mono"><%= run.response_changes.length %></td></tr><% end %>
       </tbody></table></div><% else %><div class="empty-state"><strong>No runs captured</strong>Run this monitor to create its first snapshot.</div><% end %>
     </section>
   </div>

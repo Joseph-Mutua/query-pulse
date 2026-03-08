@@ -1,7 +1,7 @@
 class Snapshot
   include Mongoid::Document
 
-  belongs_to :monitor
+  belongs_to :monitor, class_name: "QueryPulse::Monitor", inverse_of: :snapshots
   belongs_to :search_run
 
   field :captured_at, type: Time, default: -> { Time.current }

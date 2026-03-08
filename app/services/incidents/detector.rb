@@ -94,8 +94,8 @@ module Incidents
       incident = @monitor.incidents.active.where(fingerprint:).first
       now = Time.current
       if incident
-        incident.set(search_run_id: @search_run.id, last_seen_at: now,
-                     occurrence_count: incident.occurrence_count + 1, current_value: current, metadata: metadata)
+        incident.inc(occurrence_count: 1)
+        incident.set(search_run_id: @search_run.id, last_seen_at: now, current_value: current, metadata: metadata)
       else
         @monitor.incidents.create!(search_run: @search_run, incident_type: type, severity:, title:, description:, path:,
                                    previous_value: previous, current_value: current, first_seen_at: now, last_seen_at: now,

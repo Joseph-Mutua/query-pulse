@@ -8,7 +8,7 @@ module Search
     end
 
     def execute(query:, location:, language:, device:, country: nil)
-      return failure(AuthenticationError.new) if @api_key.blank?
+      return failure(Search::AuthenticationError.new) if @api_key.blank?
 
       response, duration = timed do
         @connection.get do |request|
@@ -53,7 +53,7 @@ module Search
 
     def classify_http_error(response)
       case response.status
-      when 401, 403 then AuthenticationError.new
+      when 401, 403 then Search::AuthenticationError.new
       when 429 then Error.new("Search provider rate limit exceeded", type: "RATE_LIMITED", http_status: 429)
       when 400..499 then Error.new("Search provider rejected the request", type: "PROVIDER_ERROR", http_status: response.status)
       else Error.new("Search provider request failed", type: "PROVIDER_ERROR", http_status: response.status)

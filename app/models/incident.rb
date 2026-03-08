@@ -9,7 +9,7 @@ class Incident
     schema_changed browser_failure challenge_detected
   ].freeze
 
-  belongs_to :monitor
+  belongs_to :monitor, class_name: "QueryPulse::Monitor", inverse_of: :incidents
   belongs_to :search_run
 
   field :incident_type, type: String

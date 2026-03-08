@@ -1,13 +1,13 @@
 <%= form_with model: monitor, class: "form-grid" do |form| %>
   <% if monitor.errors.any? %><div class="error-box field full"><strong><%= pluralize(monitor.errors.count, "error") %> prevented this monitor from being saved.</strong><ul><% monitor.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
   <div class="field"><%= form.label :name %><%= form.text_field :name, class: "input", placeholder: "GitHub Ruby Results", required: true %></div>
-  <div class="field"><%= form.label :engine %><%= form.select :engine, Monitor::ENGINES.map { |value| [value.humanize, value] }, {}, class: "select" %></div>
+  <div class="field"><%= form.label :engine %><%= form.select :engine, QueryPulse::Monitor::ENGINES.map { |value| [value.humanize, value] }, {}, class: "select" %></div>
   <div class="field full"><%= form.label :query %><%= form.text_field :query, class: "input mono", placeholder: "site:github.com \"ruby scraper\"", required: true %></div>
   <div class="field"><%= form.label :location %><%= form.text_field :location, class: "input", placeholder: "Austin, Texas" %></div>
-  <div class="field"><%= form.label :frequency %><%= form.select :frequency, Monitor::FREQUENCIES.keys.map { |value| [value, value] }, {}, class: "select" %></div>
+  <div class="field"><%= form.label :frequency %><%= form.select :frequency, QueryPulse::Monitor::FREQUENCIES.keys.map { |value| [value, value] }, {}, class: "select" %></div>
   <div class="field"><%= form.label :language %><%= form.text_field :language, class: "input", placeholder: "en" %></div>
   <div class="field"><%= form.label :country %><%= form.text_field :country, class: "input", placeholder: "us" %></div>
-  <div class="field"><%= form.label :device %><%= form.select :device, Monitor::DEVICES.map { |value| [value.humanize, value] }, {}, class: "select" %></div>
+  <div class="field"><%= form.label :device %><%= form.select :device, QueryPulse::Monitor::DEVICES.map { |value| [value.humanize, value] }, {}, class: "select" %></div>
   <div class="field"><%= form.label :enabled %><%= form.select :enabled, [["Enabled", true], ["Disabled", false]], {}, class: "select" %></div>
   <div class="field full"><label>Required domains</label><%= text_field_tag "monitor[required_domains]", Array(monitor.assertions["required_domains"]).join(", "), class: "input mono", placeholder: "github.com, ruby-lang.org" %><p class="field-hint">Comma-separated. Subdomains are accepted.</p></div>
   <div class="field"><label>Minimum results</label><%= number_field_tag "monitor[minimum_results]", monitor.assertions["minimum_results"], class: "input", min: 0 %></div>
