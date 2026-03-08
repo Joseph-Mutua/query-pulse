@@ -1,11 +1,11 @@
 module ApplicationHelper
   def status_badge(status)
     tone = case status.to_s
-           when "success", "resolved", "ok" then "badge-success"
-           when "failed", "critical", "open", "timeout" then "badge-danger"
-           when "running", "acknowledged", "warning" then "badge-warning"
-           else "badge-neutral"
-           end
+    when "success", "resolved", "ok" then "badge-success"
+    when "failed", "critical", "open", "timeout" then "badge-danger"
+    when "running", "acknowledged", "warning" then "badge-warning"
+    else "badge-neutral"
+    end
     tag.span(status.to_s.humanize, class: "badge #{tone}")
   end
 

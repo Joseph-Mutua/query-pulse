@@ -1,0 +1,4 @@
+enqueue_due_monitors:
+  cron: "* * * * *"
+  class: "EnqueueDueMonitorsJob"
+  queue: critical

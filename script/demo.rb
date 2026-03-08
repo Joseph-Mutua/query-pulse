@@ -21,7 +21,7 @@ end
 def normalized_data(monitor, domains:, latency:, empty: false, degraded: false)
   results = if empty
               []
-            else
+  else
               domains.each_with_index.map do |domain, index|
                 number = index + 1
                 item = { "position" => degraded && index.zero? ? 8 : number,
@@ -34,7 +34,7 @@ def normalized_data(monitor, domains:, latency:, empty: false, degraded: false)
                 item["price"] = { "amount" => number * 10, "currency" => "USD" } if degraded && index == 2
                 item
               end
-            end
+  end
   { "search_metadata" => { "engine" => monitor.engine, "query" => monitor.query, "location" => monitor.location,
                              "language" => monitor.language, "device" => monitor.device, "response_time_ms" => latency },
     "organic_results" => results, "related_questions" => ["How does QueryPulse detect search changes?"],
@@ -72,5 +72,6 @@ end
 
 metrics = Metrics::Calculator.call(window: "24h")
 puts "Demo ready: #{monitors.count} monitors, #{SearchRun.count} runs, #{Incident.active.count} open incidents"
+puts "Incident types: #{Incident.active.distinct(:incident_type).sort.join(', ')}"
 puts "24h success rate: #{metrics['success_rate']}% · p95 latency: #{metrics['p95_latency_ms']}ms"
 puts "Open http://localhost:3000/dashboard"

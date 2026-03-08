@@ -20,7 +20,7 @@ module Api
           render json: { data: serialize(monitor, detailed: true) }, status: :created,
                  location: api_v1_monitor_url(monitor)
         else
-          render_error("INVALID_MONITOR", "Monitor validation failed", status: :unprocessable_entity,
+          render_error("INVALID_MONITOR", "Monitor validation failed", status: :unprocessable_content,
                        details: monitor.errors.to_hash)
         end
       end
@@ -29,7 +29,7 @@ module Api
         if @monitor.update(monitor_params)
           render json: { data: serialize(@monitor, detailed: true) }
         else
-          render_error("INVALID_MONITOR", "Monitor validation failed", status: :unprocessable_entity,
+          render_error("INVALID_MONITOR", "Monitor validation failed", status: :unprocessable_content,
                        details: @monitor.errors.to_hash)
         end
       end

@@ -5,9 +5,12 @@ services:
     env_file: .env
     environment:
       RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: "1"
     volumes:
       - .:/rails
       - bundle:/usr/local/bundle
+      - rails-log:/rails/log
+      - rails-tmp:/rails/tmp
     ports:
       - "3000:3000"
     depends_on:
@@ -22,9 +25,12 @@ services:
     env_file: .env
     environment:
       RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: "1"
     volumes:
       - .:/rails
       - bundle:/usr/local/bundle
+      - rails-log:/rails/log
+      - rails-tmp:/rails/tmp
     depends_on:
       mongodb:
         condition: service_healthy
@@ -48,8 +54,6 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis-data:/data
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -67,4 +71,6 @@ services:
 volumes:
   bundle:
   mongo-data:
+  rails-log:
+  rails-tmp:
   redis-data:

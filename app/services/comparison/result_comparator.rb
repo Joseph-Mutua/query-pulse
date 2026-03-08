@@ -74,8 +74,9 @@ module Comparison
     def compare_organic_results(previous, current, path)
       previous_by_id = index_results(previous)
       current_by_id = index_results(current)
+      matched_identities = previous_by_id.keys & current_by_id.keys
 
-      (previous_by_id.keys & current_by_id.keys).each do |identity|
+      matched_identities.each do |identity|
         before = previous_by_id.fetch(identity)
         after = current_by_id.fetch(identity)
         movement = (after[:position] - before[:position]).abs
@@ -84,6 +85,14 @@ module Comparison
                      "url" => after[:result]["link"], "previous_position" => before[:position],
                      "current_position" => after[:position], "movement" => movement)
         end
+        compare_values(before[:result].except("position"), after[:result].except("position"), "#{path}[]")
+      end
+
+      unmatched_previous = previous_by_id.except(*matched_identities).values.sort_by { |item| item[:position] }
+      unmatched_current = current_by_id.except(*matched_identities).values.sort_by { |item| item[:position] }
+      unmatched_previous.zip(unmatched_current).each do |before, after|
+        next unless before && after
+
         compare_values(before[:result].except("position"), after[:result].except("position"), "#{path}[]")
       end
     end

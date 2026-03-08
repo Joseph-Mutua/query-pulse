@@ -25,4 +25,13 @@ RSpec.describe Comparison::ResultComparator do
 
     expect(changes).to include(include("type" => "RESULT_ORDER_CHANGED", "movement" => 5, "previous_position" => 1, "current_position" => 6))
   end
+
+  it "still detects structural drift when organic result identities are replaced" do
+    previous = { "organic_results" => [{ "position" => 1, "link" => "https://old.example/a", "price" => "$10", "snippet" => "old" }] }
+    current = { "organic_results" => [{ "position" => 1, "link" => "https://new.example/a", "price" => { "amount" => 10 } }] }
+    changes = described_class.call(previous:, current:)["changes"]
+
+    expect(changes).to include(include("path" => "organic_results[].snippet", "type" => "FIELD_REMOVED"))
+    expect(changes).to include(include("path" => "organic_results[].price", "type" => "TYPE_CHANGED"))
+  end
 end

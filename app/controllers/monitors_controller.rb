@@ -22,7 +22,7 @@ class MonitorsController < ApplicationController
     if @monitor.save
       redirect_to @monitor, notice: "Monitor created."
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -30,7 +30,7 @@ class MonitorsController < ApplicationController
     if @monitor.update(monitor_params)
       redirect_to @monitor, notice: "Monitor updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -70,9 +70,9 @@ class MonitorsController < ApplicationController
       value = permitted.delete(key)
       parsed = if %w[minimum_results maximum_results maximum_response_time_ms].include?(key)
                  value.present? ? value.to_i : nil
-               else
+      else
                  value.to_s.split(",").map(&:strip).reject(&:blank?)
-               end
+      end
       [key, parsed]
     end.compact_blank
     permitted.to_h.merge("assertions" => assertions)

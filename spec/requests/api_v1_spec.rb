@@ -18,7 +18,7 @@ RSpec.describe "API v1", type: :request do
     expect(response.parsed_body.dig("data", "frequency")).to eq("30m")
 
     post "/api/v1/monitors", params: { monitor: { name: "Missing query" } }.to_json, headers: headers
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(response.parsed_body.dig("error", "code")).to eq("INVALID_MONITOR")
 
     delete "/api/v1/monitors/#{id}"
@@ -53,6 +53,7 @@ RSpec.describe "API v1", type: :request do
   it "returns metrics and a dependency-safe health payload" do
     allow_any_instance_of(Api::V1::HealthController).to receive(:mongodb_status).and_return("ok")
     allow_any_instance_of(Api::V1::HealthController).to receive(:redis_status).and_return("ok")
+    allow_any_instance_of(Api::V1::HealthController).to receive(:sidekiq_status).and_return("available")
     get "/api/v1/metrics", params: { window: "24h" }
     expect(response.parsed_body["data"]).to include("request_count" => 0, "success_rate" => 0.0)
     get "/api/v1/health"

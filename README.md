@@ -34,7 +34,7 @@ cd query-pulse
 cp .env.example .env
 docker compose up -d mongodb redis
 docker compose build web sidekiq
-docker compose run --rm web bin/setup
+docker compose run --rm web bin/setup --skip-server
 docker compose run --rm web bin/demo
 docker compose up web sidekiq browser-worker
 ```
@@ -153,7 +153,7 @@ Human-oriented docs are available at `/docs`; the machine-readable contract is [
 
 ## Testing and CI
 
-RSpec covers schema extraction/hashing, recursive diffs, ignored paths, ranking movement, assertions, relevance, incident deduplication/resolution, latency metrics, adapters, execution persistence, parser fixtures, CRUD, manual execution, run diffs, incidents, pagination, metrics, and health. WebMock prevents provider calls. Playwright tests the browser worker’s network policy offline. GitHub Actions runs RSpec with MongoDB/Redis services, RuboCop, Brakeman, TypeScript build, ESLint/Prettier, Playwright tests, and uploads Playwright reports on failure.
+RSpec covers schema extraction/hashing, recursive diffs, ignored paths, ranking movement, assertions, relevance, incident deduplication/resolution, latency metrics, adapters, execution persistence, parser fixtures, API behavior, and a complete rack-level operator workflow. WebMock prevents provider calls. Playwright tests the browser worker’s network policy offline. GitHub Actions runs RSpec with MongoDB/Redis services, RuboCop, Brakeman, TypeScript build, ESLint/Prettier, Playwright tests, and uploads Playwright reports on failure.
 
 ## Operations and scale
 
@@ -170,7 +170,7 @@ ADRs in `docs/adr` explain document storage, the modular monolith, normalized re
 - Metrics are computed on demand; high-volume deployments need rollups.
 - Snapshots have no built-in TTL/archive policy yet.
 - Browser diagnostics are an isolated HTTP worker but are not yet triggered from the Rails UI.
-- Rails UI workflows have request coverage; browser-level end-to-end coverage currently focuses on the worker security boundary.
+- Rails UI workflows have deterministic rack-level system coverage; full JavaScript-enabled browser E2E coverage remains future work.
 - Distributed scheduler locking is not needed for the default single scheduler and should be added before horizontal scheduler scaling.
 
 Recommended next steps are authentication/API tokens, retention policies, provider quota budgets, browser-worker job integration, notification channels, and pre-aggregated metric buckets.

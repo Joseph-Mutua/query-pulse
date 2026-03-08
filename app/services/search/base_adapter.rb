@@ -1,5 +1,3 @@
-require_relative "errors"
-
 module Search
   class BaseAdapter
     def execute(query:, location:, language:, device:, country: nil)
@@ -16,8 +14,13 @@ module Search
     end
 
     def failure(error, duration_ms: nil)
+      status = case error.type
+      when "TIMEOUT" then "timeout"
+      when "INVALID_RESPONSE" then "invalid_response"
+      else "failed"
+      end
       Result.new(
-        status: error.type == "TIMEOUT" ? "timeout" : "failed",
+        status:,
         http_status: error.http_status,
         duration_ms: duration_ms,
         provider: provider_name,

@@ -42,13 +42,14 @@ module Search
     end
 
     def complete_success(run, result)
-      normalized = Normalization::SearchResultNormalizer.call(raw: result.raw, monitor: @monitor,
+      safe_raw = Observability::EventLogger.sanitize(result.raw)
+      normalized = Normalization::SearchResultNormalizer.call(raw: safe_raw, monitor: @monitor,
                                                                response_time_ms: result.duration_ms)
       previous = @monitor.snapshots.recent_first.first
       completed_at = Time.current
       run.set(status: "success", completed_at:, http_status: result.http_status,
               response_time_ms: result.duration_ms, result_count: normalized["organic_results"].length,
-              provider: result.provider, raw_response: result.raw, normalized_response: normalized)
+              provider: result.provider, raw_response: safe_raw, normalized_response: normalized)
       current = Comparison::SnapshotBuilder.call(monitor: @monitor, search_run: run, normalized_data: normalized)
       comparison = previous ? Comparison::ResultComparator.call(previous:, current:) : { "changes" => [], "summary" => {} }
       assertion_results = Assertions::Evaluator.call(data: normalized, assertions: @monitor.assertions,

@@ -3,8 +3,3 @@
   - critical
   - default
   - low
-:scheduler:
-  :schedule:
-    enqueue_due_monitors:
-      cron: "* * * * *"
-      class: "EnqueueDueMonitorsJob"

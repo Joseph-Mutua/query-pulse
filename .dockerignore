@@ -33,6 +33,11 @@
 
 # Ignore assets.
 /node_modules/
+/browser-worker/node_modules/
+/browser-worker/dist/
+/browser-worker/artifacts/
+/browser-worker/playwright-report/
+/browser-worker/test-results/
 /app/assets/builds/*
 !/app/assets/builds/.keep
 /public/assets

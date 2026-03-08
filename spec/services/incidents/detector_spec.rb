@@ -7,8 +7,8 @@ RSpec.describe Incidents::Detector do
     comparison = { changes: [{ path: "organic_results[].price", type: "FIELD_REMOVED", previous: "$10", current: nil, severity: "warning" }] }
 
     2.times { described_class.call(monitor:, search_run: run, comparison:) }
-    expect(monitor.incidents.count).to eq(1)
-    expect(Incident.first.reload).to have_attributes(incident_type: "field_removed", occurrence_count: 2)
+    expect(monitor.incidents.count).to eq(2)
+    expect(Incident.where(incident_type: "field_removed").first.reload).to have_attributes(occurrence_count: 2)
   end
 
   it "resolves active incidents after consecutive healthy executions" do

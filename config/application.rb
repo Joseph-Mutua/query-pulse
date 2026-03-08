@@ -13,6 +13,7 @@ require "action_mailer/railtie"
 require "action_view/railtie"
 require "action_cable/engine"
 # require "rails/test_unit/railtie"
+require_relative "../lib/request_size_limiter"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -21,7 +22,8 @@ Bundler.require(*Rails.groups)
 module QueryPulse
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.1
+    config.generators.orm :mongoid
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -41,5 +43,6 @@ module QueryPulse
     config.active_job.queue_adapter = :sidekiq
     config.action_controller.default_protect_from_forgery = true
     config.middleware.use Rack::Attack
+    config.middleware.use RequestSizeLimiter
   end
 end

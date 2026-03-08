@@ -19,7 +19,7 @@ module Api
       def update
         status = params.require(:incident).permit(:status)[:status]
         unless Incident::STATUSES.include?(status)
-          return render_error("INVALID_INCIDENT_STATUS", "Status is not supported", status: :unprocessable_entity,
+          return render_error("INVALID_INCIDENT_STATUS", "Status is not supported", status: :unprocessable_content,
                               details: { allowed: Incident::STATUSES })
         end
 

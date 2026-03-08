@@ -1,9 +1,11 @@
+require "sidekiq/api"
+
 module Api
   module V1
     class HealthController < BaseController
       def show
         dependencies = { mongodb: mongodb_status, redis: redis_status }
-        dependencies[:background_processing] = dependencies[:redis] == "ok" ? "available" : "unavailable"
+        dependencies[:background_processing] = sidekiq_status
         healthy = dependencies.values.none? { |status| %w[error unavailable].include?(status) }
         render json: { data: { status: healthy ? "ok" : "degraded", dependencies:, timestamp: Time.current } },
                status: healthy ? :ok : :service_unavailable
@@ -24,6 +26,14 @@ module Api
         "error"
       ensure
         client&.close
+      end
+
+      def sidekiq_status
+        return "unavailable" unless redis_status == "ok"
+
+        Sidekiq::ProcessSet.new.size.positive? ? "available" : "unavailable"
+      rescue StandardError
+        "unavailable"
       end
     end
   end

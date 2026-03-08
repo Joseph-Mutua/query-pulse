@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.2.2", ">= 7.2.2.2"
+gem "rails", "~> 8.1.3", ">= 8.1.3.1"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -20,6 +20,7 @@ gem "mongoid", "~> 9.0"
 gem "redis", ">= 5.0"
 gem "sidekiq", "~> 7.3"
 gem "sidekiq-cron", "~> 2.1"
+gem "connection_pool", "~> 2.5"
 gem "faraday", "~> 2.12"
 gem "faraday-retry", "~> 2.2"
 gem "rack-attack", "~> 6.7"
@@ -49,6 +50,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
   gem "rspec-rails", "~> 7.1"
+  gem "capybara", "~> 3.40"
   gem "webmock", "~> 3.24"
 end
 

@@ -29,7 +29,7 @@ module Api
       def render_validation_error(error)
         record = error.respond_to?(:document) ? error.document : error.respond_to?(:model) ? error.model : nil
         details = record&.errors&.to_hash || {}
-        render_error("VALIDATION_ERROR", "The resource is invalid", status: :unprocessable_entity, details:)
+        render_error("VALIDATION_ERROR", "The resource is invalid", status: :unprocessable_content, details:)
       end
 
       def render_parameter_error(error)

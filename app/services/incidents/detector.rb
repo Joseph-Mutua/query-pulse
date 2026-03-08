@@ -55,6 +55,16 @@ module Incidents
     end
 
     def detect_comparison_changes
+      structural = Array(@comparison["changes"]).select do |change|
+        %w[FIELD_ADDED FIELD_REMOVED TYPE_CHANGED].include?(change["type"])
+      end
+      if structural.any?
+        upsert(type: "schema_changed", severity: "warning", title: "Normalized response schema changed",
+               description: "One or more fields or JSON types changed in the normalized response.",
+               path: "response.schema", previous: @previous&.schema_hash, current: @current&.schema_hash,
+               metadata: { "structural_change_count" => structural.length })
+      end
+
       Array(@comparison["changes"]).each do |change|
         incident_type = TYPE_MAP[change["type"]]
         next unless incident_type
