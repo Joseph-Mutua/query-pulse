@@ -9,6 +9,21 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
+  namespace :api do
+    namespace :v1 do
+      resources :monitors do
+        post :run, on: :member
+        get :runs, on: :member
+      end
+      resources :runs, only: :show do
+        get :diff, on: :member
+      end
+      resources :incidents, only: %i[index show update]
+      get :metrics, to: "metrics#index"
+      get :health, to: "health#show"
+    end
+  end
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
