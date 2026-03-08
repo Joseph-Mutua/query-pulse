@@ -1,0 +1,18 @@
+<% content_for :page_title, "Search playground" %><% content_for :eyebrow, "Execute and inspect a provider request" %>
+<div class="grid-2">
+  <section class="panel"><header class="panel-header"><h2>Request</h2><span class="badge badge-neutral">offline-safe</span></header><div class="panel-body">
+    <%= form_with url: playground_path, method: :post, scope: :search, class: "form-grid" do |form| %>
+      <div class="field"><%= form.label :engine %><%= form.select :engine, Monitor::ENGINES.map { |value| [value.humanize, value] }, { selected: @request_data["engine"] }, class: "select" %></div>
+      <div class="field"><%= form.label :device %><%= form.select :device, Monitor::DEVICES.map { |value| [value.humanize, value] }, { selected: @request_data["device"] }, class: "select" %></div>
+      <div class="field full"><%= form.label :query %><%= form.text_field :query, value: @request_data["query"], class: "input mono", required: true %></div>
+      <div class="field"><%= form.label :location %><%= form.text_field :location, value: @request_data["location"], class: "input" %></div>
+      <div class="field"><%= form.label :language %><%= form.text_field :language, value: @request_data["language"], class: "input" %></div>
+      <div class="form-actions"><%= button_tag "Run search", name: "intent", value: "run", class: "btn btn-primary" %><%= button_tag "Save as monitor", name: "intent", value: "save", class: "btn" %></div>
+    <% end %>
+  </div></section>
+  <section class="panel"><header class="panel-header"><h2>Response</h2><% if @result %><span><%= status_badge(@result.status) %> <span class="secondary" style="display:inline"><%= @result.http_status %> · <%= format_duration(@result.duration_ms) %></span></span><% end %></header><div class="panel-body">
+    <% if @normalized %><div data-controller="clipboard"><div class="split-actions" style="margin-bottom:10px"><button class="btn" data-action="clipboard#copy" data-clipboard-target="button">Copy JSON</button><button class="btn" data-action="clipboard#copy" data-clipboard-target="button">Copy response</button></div><pre class="json-view" data-clipboard-target="source"><%= JSON.pretty_generate(@normalized) %></pre></div>
+    <% elsif @result %><div class="error-box"><strong><%= @result.error_type %></strong><br><%= @result.error_message %></div>
+    <% else %><div class="empty-state"><strong>Ready to run</strong>The fake engine produces deterministic structured results without an API key.</div><% end %>
+  </div></section>
+</div>

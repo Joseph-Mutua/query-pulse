@@ -1,0 +1,7 @@
+<% content_for :page_title, "Incidents" %><% content_for :eyebrow, "Detected reliability anomalies" %>
+<% content_for :actions do %><div class="split-actions"><%= link_to "All", incidents_path, class: "btn #{@status.blank? ? 'btn-primary' : ''}" %><% Incident::STATUSES.each do |status| %><%= link_to status.humanize, incidents_path(status:), class: "btn #{@status == status ? 'btn-primary' : ''}" %><% end %></div><% end %>
+<div class="panel"><header class="panel-header"><h2><%= pluralize(@incidents.count, "incident") %></h2></header>
+  <% if @incidents.any? %><div class="table-wrap"><table class="data-table"><thead><tr><th>Incident</th><th>Severity</th><th>Monitor</th><th>Path</th><th>Occurrences</th><th>Last seen</th><th>Status</th></tr></thead><tbody>
+    <% @incidents.each do |incident| %><tr><td><%= link_to incident.title, incident_path(incident), class: "primary-cell" %><span class="secondary"><%= incident.incident_type.humanize %></span></td><td><%= status_badge(incident.severity) %></td><td><%= link_to incident.monitor.name, monitor_path(incident.monitor) %></td><td class="mono"><%= incident.path %></td><td class="mono"><%= incident.occurrence_count %></td><td class="text-muted"><%= time_ago_in_words(incident.last_seen_at) %> ago</td><td><%= status_badge(incident.status) %></td></tr><% end %>
+  </tbody></table></div><% else %><div class="empty-state"><strong>No incidents match this view</strong>Detected structural, assertion, and performance anomalies will appear here.</div><% end %>
+</div>

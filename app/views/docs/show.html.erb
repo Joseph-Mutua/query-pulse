@@ -1,0 +1,33 @@
+<% content_for :page_title, "API documentation" %><% content_for :eyebrow, "REST API · v1" %>
+<div class="docs">
+  <p class="page-lede">QueryPulse exposes monitor configuration, execution history, diffs, incidents, metrics, and health through a JSON API. All collection responses include bounded pagination metadata.</p>
+  <h2>Base URL</h2><pre>http://localhost:3000/api/v1</pre>
+  <h2>Core endpoints</h2>
+  <div class="panel"><table class="data-table"><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody>
+    <% [["GET","/monitors","List monitors"],["POST","/monitors","Create a monitor"],["GET","/monitors/:id","Inspect a monitor"],["PATCH","/monitors/:id","Update a monitor"],["DELETE","/monitors/:id","Delete a monitor"],["POST","/monitors/:id/run","Queue an execution"],["GET","/monitors/:id/runs","List execution history"],["GET","/runs/:id","Inspect an execution"],["GET","/runs/:id/diff","Read structured changes"],["GET","/incidents","List incidents"],["PATCH","/incidents/:id","Update incident status"],["GET","/metrics?window=24h","Aggregate reliability metrics"],["GET","/health","Check dependency status"]].each do |method,path,purpose| %><tr><td><span class="badge badge-neutral"><%= method %></span></td><td class="mono text-signal"><%= path %></td><td class="text-muted"><%= purpose %></td></tr><% end %>
+  </tbody></table></div>
+  <h2>Create a monitor</h2><pre>curl -X POST http://localhost:3000/api/v1/monitors \
+  -H "Content-Type: application/json" \
+  -d '{
+    "monitor": {
+      "name": "GitHub Ruby Results",
+      "engine": "fake",
+      "query": "site:github.com ruby scraper",
+      "location": "Austin, Texas",
+      "language": "en",
+      "country": "us",
+      "device": "desktop",
+      "frequency": "15m",
+      "assertions": { "minimum_results": 5, "required_domains": ["github.com"] }
+    }
+  }'</pre>
+  <h2>Errors</h2><p>Errors have a stable code, a human-readable message, and machine-readable details.</p><pre>{
+  "error": {
+    "code": "INVALID_MONITOR",
+    "message": "Monitor validation failed",
+    "details": { "query": ["can't be blank"] }
+  }
+}</pre>
+  <h2>Pagination</h2><p>Use <code class="code-inline">page</code> and <code class="code-inline">per_page</code>. Page size is capped at 100.</p><pre>{ "pagination": { "page": 1, "per_page": 25, "total": 82, "total_pages": 4 } }</pre>
+  <p>The complete machine-readable contract is available at <a class="text-signal" href="/openapi.yaml">/openapi.yaml</a>.</p>
+</div>
