@@ -34,7 +34,9 @@ module Assertions
       expected = Array(expected).map { |domain| normalize_domain(domain) }
       actual = actual_domains
       missing = expected.reject { |domain| actual.any? { |candidate| domain_match?(candidate, domain) } }
-      result("required_domains", expected, actual, missing.empty?, "missing" => missing)
+      unexpected = actual.reject { |candidate| expected.any? { |domain| domain_match?(candidate, domain) } }
+      result("required_domains", expected, actual, missing.empty? && unexpected.empty?,
+             "missing" => missing, "unexpected" => unexpected)
     end
 
     def evaluate_forbidden_domains(expected)

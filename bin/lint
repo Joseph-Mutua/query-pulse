@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+APP_ROOT = File.expand_path("..", __dir__)
+Dir.chdir(APP_ROOT) do
+  abort "RuboCop failed" unless system("bundle", "exec", "rubocop")
+  abort "Browser worker lint failed" unless system("npm", "--prefix", "browser-worker", "run", "lint")
+end

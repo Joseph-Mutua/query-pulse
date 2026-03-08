@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+APP_ROOT = File.expand_path("..", __dir__)
+exec File.join(APP_ROOT, "bin", "rails"), "runner", File.join(APP_ROOT, "script", "demo.rb")

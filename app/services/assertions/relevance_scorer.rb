@@ -39,9 +39,11 @@ module Assertions
       expected = Array(@assertions["required_domains"])
       return 25 if expected.empty?
 
-      domains = @results.map { |result| result["domain"].to_s }
-      matched = expected.count { |domain| domains.any? { |actual| actual == domain || actual.end_with?(".#{domain}") } }
-      (matched.fdiv(expected.length) * 25).round(2)
+      domains = @results.map { |result| result["domain"].to_s }.reject(&:blank?)
+      return 0 if domains.empty?
+
+      matched = domains.count { |actual| expected.any? { |domain| actual == domain || actual.end_with?(".#{domain}") } }
+      (matched.fdiv(domains.length) * 25).round(2)
     end
 
     def text_expectation_score(assertion, field, maximum)

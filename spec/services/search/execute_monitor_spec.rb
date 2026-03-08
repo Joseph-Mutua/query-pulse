@@ -9,7 +9,9 @@ RSpec.describe Search::ExecuteMonitor do
     expect(run.status).to eq("success")
     expect(run.snapshot.normalized_data["organic_results"].length).to eq(6)
     expect(run.schema_fingerprint).to eq(run.snapshot.schema_hash)
-    expect(run.assertion_results).to all(include("passed" => true))
+    expect(run.assertion_results.find { |result| result["assertion"] == "minimum_results" }).to include("passed" => true)
+    expect(run.assertion_results.find { |result| result["assertion"] == "required_domains" }).to include("passed" => false)
+    expect(run.monitor.incidents.first.incident_type).to eq("domain_mismatch")
     expect(run.relevance_score).to be_between(0, 100)
   end
 end
