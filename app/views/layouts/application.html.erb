@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Serp" %></title>
+    <title><%= content_for(:title) || "QueryPulse" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -18,9 +18,30 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="app-body">
+    <aside class="sidebar">
+      <%= link_to root_path, class: "brand" do %>
+        <span class="brand-mark">Q</span><span>QueryPulse</span>
+      <% end %>
+      <nav class="nav-list" aria-label="Primary navigation">
+        <%= link_to dashboard_path, class: "nav-item #{'active' if controller_name == 'dashboard'}" do %><span>⌁</span> Overview<% end %>
+        <%= link_to monitors_path, class: "nav-item #{'active' if controller_name == 'monitors'}" do %><span>◎</span> Monitors<% end %>
+        <%= link_to incidents_path, class: "nav-item #{'active' if controller_name == 'incidents'}" do %><span>△</span> Incidents<% end %>
+        <%= link_to playground_path, class: "nav-item #{'active' if controller_name == 'playground'}" do %><span>⌘</span> Playground<% end %>
+        <%= link_to docs_path, class: "nav-item #{'active' if controller_name == 'docs'}" do %><span>□</span> API docs<% end %>
+      </nav>
+      <div class="sidebar-foot"><span class="pulse-dot"></span><span>Monitoring ready</span></div>
+    </aside>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow"><%= content_for(:eyebrow) || "Search reliability operations" %></p>
+          <h1><%= content_for(:page_title) || "QueryPulse" %></h1>
+        </div>
+        <div class="topbar-actions"><%= yield :actions %></div>
+      </header>
+      <% flash.each do |type, message| %><div class="flash <%= type %>" role="status"><%= message %></div><% end %>
+      <main class="content"><%= yield %></main>
+    </div>
   </body>
 </html>

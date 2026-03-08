@@ -1,0 +1,39 @@
+<% content_for :page_title, @monitor.name %>
+<% content_for :eyebrow, "#{@monitor.engine} · #{@monitor.frequency} · #{@monitor.enabled? ? 'active' : 'paused'}" %>
+<% content_for :actions do %>
+  <%= button_to "Run now", run_monitor_path(@monitor), class: "btn btn-primary", form: { style: "display:inline" } %>
+  <%= link_to "Edit", edit_monitor_path(@monitor), class: "btn" %>
+  <%= button_to(@monitor.enabled? ? "Disable" : "Enable", toggle_monitor_path(@monitor), method: :patch, class: "btn btn-ghost", form: { style: "display:inline" }) %>
+<% end %>
+
+<dl class="definition-grid">
+  <div class="definition"><dt>Query</dt><dd class="mono"><%= @monitor.query %></dd></div>
+  <div class="definition"><dt>Location</dt><dd><%= @monitor.location.presence || "Global" %></dd></div>
+  <div class="definition"><dt>Locale</dt><dd class="mono"><%= @monitor.language %>-<%= @monitor.country.upcase %> · <%= @monitor.device %></dd></div>
+  <div class="definition"><dt>Next execution</dt><dd><%= @monitor.next_execution_at ? l(@monitor.next_execution_at, format: :short) : "Not scheduled" %></dd></div>
+</dl>
+
+<section class="metric-grid" style="grid-template-columns:repeat(4,minmax(140px,1fr)); margin-top:18px">
+  <div class="metric"><div class="metric-label">Success rate · 7d</div><div class="metric-value"><%= @metrics["success_rate"] %>%</div></div>
+  <div class="metric"><div class="metric-label">Average latency</div><div class="metric-value"><%= format_duration(@metrics["average_latency_ms"]) %></div></div>
+  <div class="metric"><div class="metric-label">p95 latency</div><div class="metric-value"><%= format_duration(@metrics["p95_latency_ms"]) %></div></div>
+  <div class="metric"><div class="metric-label">Open incidents</div><div class="metric-value"><%= @incidents.count %></div></div>
+</section>
+
+<div class="grid-2">
+  <div>
+    <section class="panel"><header class="panel-header"><h2>Execution history</h2><span class="secondary">Most recent 25</span></header>
+      <% if @runs.any? %><div class="table-wrap"><table class="data-table"><thead><tr><th>Started</th><th>Status</th><th>Provider</th><th>Latency</th><th>Results</th><th>Changes</th></tr></thead><tbody>
+        <% @runs.each do |run| %><tr><td><%= link_to(run.started_at ? l(run.started_at, format: :short) : "Queued", run_path(run), class: "primary-cell") %></td><td><%= status_badge(run.status) %></td><td class="mono"><%= run.provider %></td><td class="mono"><%= format_duration(run.response_time_ms) %></td><td class="mono"><%= run.result_count %></td><td class="mono"><%= run.changes.length %></td></tr><% end %>
+      </tbody></table></div><% else %><div class="empty-state"><strong>No runs captured</strong>Run this monitor to create its first snapshot.</div><% end %>
+    </section>
+  </div>
+  <div>
+    <section class="panel"><header class="panel-header"><h2>Configured assertions</h2></header><div class="panel-body">
+      <% if @monitor.assertions.any? %><div class="stack"><% @monitor.assertions.each do |key, value| %><div><span class="secondary"><%= key.humanize %></span><span class="mono"><%= value.is_a?(Array) ? value.join(", ") : value %></span></div><% end %></div><% else %><span class="text-muted">No assertions configured.</span><% end %>
+    </div></section>
+    <section class="panel"><header class="panel-header"><h2>Open incidents</h2></header>
+      <% if @incidents.any? %><% @incidents.each do |incident| %><%= link_to incident_path(incident), class: "incident-card severity-#{incident.severity}" do %><div class="incident-head"><span class="incident-title"><%= incident.title %></span><%= status_badge(incident.severity) %></div><div class="incident-meta"><%= incident.path %> · <%= incident.occurrence_count %>×</div><% end %><% end %><% else %><div class="empty-state"><strong>Healthy</strong>No active incidents.</div><% end %>
+    </section>
+  </div>
+</div>

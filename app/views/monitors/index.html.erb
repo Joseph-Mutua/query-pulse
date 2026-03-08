@@ -1,0 +1,16 @@
+<% content_for :page_title, "Monitors" %>
+<% content_for :eyebrow, "Scheduled search checks" %>
+<% content_for :actions do %><%= link_to "New monitor", new_monitor_path, class: "btn btn-primary" %><% end %>
+
+<div class="panel">
+  <header class="panel-header"><h2><%= pluralize(@monitors.count, "configured monitor") %></h2></header>
+  <% if @monitors.any? %><div class="table-wrap"><table class="data-table">
+    <thead><tr><th>Name / query</th><th>Engine</th><th>Frequency</th><th>Status</th><th>Latest run</th><th>Next run</th></tr></thead>
+    <tbody><% @monitors.each do |monitor| %><% latest = monitor.search_runs.recent_first.first %><tr>
+      <td><%= link_to monitor.name, monitor_path(monitor), class: "primary-cell" %><span class="secondary mono"><%= monitor.query.truncate(65) %></span></td>
+      <td><span class="mono"><%= monitor.engine %></span><span class="secondary"><%= monitor.location.presence || "Global" %></span></td>
+      <td class="mono"><%= monitor.frequency %></td><td><%= status_badge(monitor.enabled? ? "enabled" : "disabled") %></td>
+      <td><%= latest ? status_badge(latest.status) : "—" %></td><td class="text-muted"><%= monitor.next_execution_at ? time_ago_in_words(monitor.next_execution_at) : "—" %></td>
+    </tr><% end %></tbody>
+  </table></div><% else %><div class="empty-state"><strong>No monitors configured</strong>Define a query, schedule, and expectations to start collecting snapshots.<br><br><%= link_to "Create monitor", new_monitor_path, class: "btn btn-primary" %></div><% end %>
+</div>

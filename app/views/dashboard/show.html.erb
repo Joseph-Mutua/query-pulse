@@ -1,0 +1,47 @@
+<% content_for :page_title, "Reliability overview" %>
+<% content_for :eyebrow, "Last 24 hours" %>
+<% content_for :actions do %>
+  <%= link_to "New monitor", new_monitor_path, class: "btn btn-primary" %>
+<% end %>
+
+<section class="metric-grid" aria-label="Reliability metrics">
+  <div class="metric"><div class="metric-label">Active monitors</div><div class="metric-value"><%= @active_monitors %></div><div class="metric-detail">scheduled checks</div></div>
+  <div class="metric"><div class="metric-label">Successful runs</div><div class="metric-value"><%= @metrics["success_count"] %></div><div class="metric-detail"><%= @metrics["request_count"] %> total requests</div></div>
+  <div class="metric"><div class="metric-label">Open incidents</div><div class="metric-value"><%= @open_incidents %></div><div class="metric-detail">requires review</div></div>
+  <div class="metric"><div class="metric-label">Average latency</div><div class="metric-value"><%= format_duration(@metrics["average_latency_ms"]) %></div><div class="metric-detail">provider response</div></div>
+  <div class="metric"><div class="metric-label">p95 latency</div><div class="metric-value"><%= format_duration(@metrics["p95_latency_ms"]) %></div><div class="metric-detail">tail performance</div></div>
+  <div class="metric"><div class="metric-label">Success rate</div><div class="metric-value"><%= @metrics["success_rate"] %>%</div><div class="metric-detail">completed successfully</div></div>
+</section>
+
+<div class="grid-2">
+  <section class="panel">
+    <header class="panel-header"><h2>Recent executions</h2><%= link_to "All monitors →", monitors_path, class: "text-signal secondary" %></header>
+    <% if @recent_runs.any? %>
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>Monitor</th><th>Status</th><th>Latency</th><th>Results</th><th>Relevance</th><th>Started</th></tr></thead>
+        <tbody>
+          <% @recent_runs.each do |run| %><tr>
+            <td><%= link_to run.monitor.name, run_path(run), class: "primary-cell" %><span class="secondary mono"><%= run.monitor.query.truncate(48) %></span></td>
+            <td><%= status_badge(run.status) %></td><td class="mono"><%= format_duration(run.response_time_ms) %></td>
+            <td class="mono"><%= run.result_count %></td><td class="mono"><%= run.relevance_score || "—" %></td>
+            <td class="text-muted"><%= run.started_at ? time_ago_in_words(run.started_at) + " ago" : "Queued" %></td>
+          </tr><% end %>
+        </tbody>
+      </table></div>
+    <% else %>
+      <div class="empty-state"><strong>No executions yet</strong>Create a monitor or use the playground to begin observing search responses.</div>
+    <% end %>
+  </section>
+
+  <section class="panel">
+    <header class="panel-header"><h2>Active incidents</h2><%= link_to "View all →", incidents_path, class: "text-signal secondary" %></header>
+    <% if @recent_incidents.any? %>
+      <% @recent_incidents.each do |incident| %>
+        <%= link_to incident_path(incident), class: "incident-card severity-#{incident.severity}" do %>
+          <div class="incident-head"><span class="incident-title"><%= incident.title %></span><%= status_badge(incident.severity) %></div>
+          <div class="incident-meta"><%= incident.monitor.name %> · <span class="mono"><%= incident.path %></span> · <%= time_ago_in_words(incident.last_seen_at) %> ago · <%= pluralize(incident.occurrence_count, "occurrence") %></div>
+        <% end %>
+      <% end %>
+    <% else %><div class="empty-state"><strong>No open incidents</strong>Persistent anomalies will appear here.</div><% end %>
+  </section>
+</div>
