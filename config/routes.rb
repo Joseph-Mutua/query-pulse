@@ -24,6 +24,20 @@ Rails.application.routes.draw do
     end
   end
 
+  root "dashboard#show"
+  get "dashboard", to: "dashboard#show"
+  resources :monitors do
+    post :run, on: :member
+    patch :toggle, on: :member
+  end
+  resources :runs, only: :show
+  resources :incidents, only: %i[index show update] do
+    patch :acknowledge, on: :member
+    patch :resolve, on: :member
+  end
+  match "playground", to: "playground#show", via: %i[get post]
+  get "docs", to: "docs#show"
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
