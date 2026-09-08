@@ -1,8 +1,8 @@
-# QueryPulse
+# Query-Pulse
 
 **Monitor search APIs, detect structural and relevance changes, and investigate reliability regressions with Ruby on Rails.**
 
-QueryPulse is an independent developer tool for continuously observing structured search responses. It records reproducible snapshots, normalizes provider data, detects schema and ranking changes, evaluates explicit quality assertions, tracks latency, and groups recurring failures into actionable incidents.
+Query-Pulse is an independent developer tool for continuously observing structured search responses. It records reproducible snapshots, normalizes provider data, detects schema and ranking changes, evaluates explicit quality assertions, tracks latency, and groups recurring failures into actionable incidents.
 
 ## The problem
 
