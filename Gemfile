@@ -25,7 +25,7 @@ gem "faraday", "~> 2.12"
 gem "faraday-retry", "~> 2.2"
 gem "rack-attack", "~> 6.7"
 gem "nokogiri", ">= 1.16"
-gem "json", "< 3"
+gem "json", "< 4"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"

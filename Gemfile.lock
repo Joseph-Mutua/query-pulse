@@ -140,7 +140,7 @@ GEM
     jbuilder (2.15.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
-    json (2.21.2)
+    json (3.0.0)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -393,7 +393,7 @@ DEPENDENCIES
   faraday-retry (~> 2.2)
   importmap-rails
   jbuilder
-  json (< 3)
+  json (< 4)
   mongoid (~> 9.0)
   nokogiri (>= 1.16)
   psych (= 5.1.2)
