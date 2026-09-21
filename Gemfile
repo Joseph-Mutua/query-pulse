@@ -16,7 +16,7 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-gem "mongoid", "~> 9.0"
+gem "mongoid", "~> 9.1"
 gem "redis", ">= 5.0"
 gem "sidekiq", "~> 7.3"
 gem "sidekiq-cron", "~> 2.1"
