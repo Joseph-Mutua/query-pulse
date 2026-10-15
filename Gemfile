@@ -42,7 +42,7 @@ gem "bootsnap", require: false
 group :development, :test do
   # RDoc 8 pulls an RBS extension that is not yet portable across all Windows toolchains.
   gem "rdoc", "= 6.6.3.1"
-  gem "psych", "= 5.1.2"
+  gem "psych", "5.5.0"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
